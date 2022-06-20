@@ -44,15 +44,15 @@ Set up a virtual python environment named "bigdata_venv" from within BIG_DATA_HO
 
 The requirements.txt file contains a list of all the libraries that the code in this repository depends on. If the last command with "pip install -r" fails, you will need to resolve the issue or else some of the code may not run because libraries will be missing. (If it gives a warning, such as to tell you that there is a newer version of pip, you can continue regardless.)
 
-## 
-In the twitterWithOpenSky_assignement3, there is a Jupyter notebook. You can run the Jupyter notebook and have it recognize the code in the subdirectories (actually, all of those named "python").
+## Setting up Jupyter Lab
+The BIG_DATA_HOME/notebooks directory has notebooks to use with Jupyter. You can have Jupyter recognize the code in the python subdirectory and execute it within the python virtual environment that you set up.
 To inform Jupyter of your own virtual environment, execute the following (assuming your virtual environment is named "bigdata_venv") from within BIG_DATA_HOME:
 > python -m ipykernel install --name=bigdata_venv
 
 This command should state something like:
 > Installed kernelspec bigdata_venv in /usr/local/share/jupyter/kernels/bigdata_venv
 
-Then you can run the script (also in BIG_DATA_HOME) that starts Jupyter on your local machine:
-> ./runJupyter.sh
+Then you can run the script in BIG_DATA_HOME/sh that starts Jupyter on your local machine:
+> ./sh/runJupyter.sh
 
 This should open up a page in your web browser showing Jupyter Lab.
