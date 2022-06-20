@@ -29,8 +29,8 @@ If you go this route, you will need to install git on your local machine (or use
 
 This will create a subdirectory named classResources with a copy of all of the stuff you see in this repository. Let's refer to the subdirectory "classResources" as BIG_DATA_HOME.
 
-1. If new files or updates are made to the GitHub repository, you can update your local repository:
-> git update
+1. If new files or updates are made to the GitHub repository, you can update your local repository by going to BIG_DATA_HOME and executing:
+> git pull
 
 There are a myriad of issues that can happen when you update with git if you have made changes to the code you downloaded and the same files have been changed in the GitHub repository. Commit your changes (which commits them to your local repository) and then try updating. Beyond this, there are tons (probably too much?) of help in the internet.
 
