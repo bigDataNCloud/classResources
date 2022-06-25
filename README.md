@@ -63,11 +63,11 @@ created virtual environment CPython3.9.2.final.0-64 in 1803ms
     added seed packages: pip==22.0.4, setuptools==62.1.0, wheel==0.37.1
   activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
 ```
-1. _Activate_ the Python installation in your new sandbox so that all of the libraries you install will be local to the sandbox.
+2. _Activate_ the Python installation in your new sandbox so that all of the libraries you install will be local to the sandbox.
 ```
 > source bigdata_venv/bin/activate
 ```
-1. Use Python's package manager, pip, to install all of the libraries you will need that are listed in the requirements.txt file from this GitHub repository.
+3. Use Python's package manager, pip, to install all of the libraries you will need that are listed in the requirements.txt file from this GitHub repository.
 ```
 > pip install -r python/requirements.txt
 ```
