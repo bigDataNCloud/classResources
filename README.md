@@ -12,7 +12,7 @@ You can download the entire set of resources as a zip file or use git to grab th
 * python: Python code
 
 ## Obtaining the Class Resources
-You can download the latest version of the repository (bigDataNCloud/classResources at GitHub) as a zip file or set up Git on your local machine to synchronize a local repository with the one in GitHub. If you are not familiar with Git, it may be too much to learn all about Git in a short time and you may feel more comfortable going the manual route, but Git is not difficult when you are not contributing to or changing code in the repository.
+You can download the latest version of the repository [bigDataNCloud/classResources at GitHub](https://github.com/bigDataNCloud/classResources) as a zip file or set up Git on your local machine to synchronize a local repository with the one in GitHub. If you are not familiar with Git, it may be too much to learn all about Git in a short time and you may feel more comfortable going the manual route, but Git is not difficult when you are not contributing to or changing code in the repository.
 
 ### Manually Installing by Downloading a Compressed Snapshot
 1. Download the code as a zip file and unzip the file. This will create a folder named classResources-main with all the contents of the zip file expanded.
