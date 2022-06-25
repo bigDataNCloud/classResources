@@ -69,7 +69,7 @@ created virtual environment CPython3.9.2.final.0-64 in 1803ms
 ```
 1. Use Python's package manager, pip, to install all of the libraries you will need that are listed in the requirements.txt file from this GitHub repository.
 ```
-> pip install -r requirements.txt
+> pip install -r python/requirements.txt
 ```
 
 The requirements.txt file contains a list of all the libraries that the code in this repository depends on. If the last command with "pip install -r" fails, you will need to resolve the issue or else some of the code may not run because libraries will be missing. (If it gives a warning, such as to tell you that there is a newer version of pip, you can continue regardless.)
