@@ -7,8 +7,8 @@ You can download the entire set of resources as a zip file or use git to grab th
 * notebooks: Jupyter notebooks
 * sh: home for BASH shell scripts 
 * data: where the shell scripts download data to
-* bigQuerySchemas: table schemas for use with Google Big Query
-* pubSubSchemas: data schemas for use with Google Cloud Pub/Sub
+* schemas/bigQuery: table schemas for use with Google Big Query
+* schemas/pubSub: data schemas for use with Google Cloud Pub/Sub
 * python: Python code
 
 ## Obtaining the Class Resources
