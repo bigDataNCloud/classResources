@@ -53,9 +53,22 @@ drwxr-xr-x  4 barmstrong  staff    128 Jun 20 17:27 sh
 To be able to use the Python code within the subdirs, I suggest that you set up a Python virtual environment and install the python dependencies within requirements.txt in the outermost directory. 
 
 Set up a virtual python environment named "bigdata_venv" from within BIG_DATA_HOME, activate the python environment and install all of the dependencies the code requires.
+
+1. Use virtualenv to create a Python sandbox where we will install the Python libraries needed to run our code.
 ```
 > virtualenv -p python3 bigdata_venv
+created virtual environment CPython3.9.2.final.0-64 in 1803ms
+  creator CPython3Posix(dest=/home/krannert_big_data_n_cloud/classResources/bigdata_venv, clear=False, no_vcs_ignore=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app_data_dir=/home/krannert_big_data_n_cloud/.local/share/virtualenv)
+    added seed packages: pip==22.0.4, setuptools==62.1.0, wheel==0.37.1
+  activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+```
+1. _Activate_ the Python installation in your new sandbox so that all of the libraries you install will be local to the sandbox.
+```
 > source bigdata_venv/bin/activate
+```
+1. Use Python's package manager, pip, to install all of the libraries you will need that are listed in the requirements.txt file from this GitHub repository.
+```
 > pip install -r requirements.txt
 ```
 
