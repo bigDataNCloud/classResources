@@ -63,31 +63,43 @@ created virtual environment CPython3.9.2.final.0-64 in 1803ms
     added seed packages: pip==22.0.4, setuptools==62.1.0, wheel==0.37.1
   activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
 ```
-1. _Activate_ the Python installation in your new sandbox so that all of the libraries you install will be local to the sandbox.
+2. _Activate_ the Python installation in your new sandbox so that all of the libraries you install will be local to the sandbox.
 ```
 > source bigdata_venv/bin/activate
 ```
-1. Use Python's package manager, pip, to install all of the libraries you will need that are listed in the requirements.txt file from this GitHub repository.
+3. Use Python's package manager, pip, to install all of the libraries you will need that are listed in the requirements.txt file from this GitHub repository.
 ```
-> pip install -r requirements.txt
+> pip install -r python/requirements.txt
+Collecting anyio==3.3.0
+  Downloading anyio-3.3.0-py3-none-any.whl (77 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 77.9/77.9 KB 3.5 MB/s eta 0:00:00
+...
+Installing collected packages: ...
 ```
 
 The requirements.txt file contains a list of all the libraries that the code in this repository depends on. If the last command with "pip install -r" fails, you will need to resolve the issue or else some of the code may not run because libraries will be missing. (If it gives a warning, such as to tell you that there is a newer version of pip, you can continue regardless.)
+
+You can _enter_ and _exit_ the virtual Python environment. To enter, do as we did above:
+```
+> source bigdata_env/bin/activate
+```
+
+To exit, execute the deactivate command.
+```
+> deactivate
+```
 
 ## Setting up Jupyter Lab
 The BIG_DATA_HOME/notebooks directory has notebooks to use with Jupyter. You can have Jupyter recognize the code in the python subdirectory and execute it within the python virtual environment that you set up.
 To inform Jupyter of your own virtual environment, execute the following (assuming your virtual environment is named "bigdata_venv") from within BIG_DATA_HOME:
 ```
 > python -m ipykernel install --name=bigdata_venv
+Installed kernelspec bigdata_venv in /usr/local/share/jupyter/kernels/bigdata_venv
 ```
 
-This command should state something like:
-```
-> Installed kernelspec bigdata_venv in /usr/local/share/jupyter/kernels/bigdata_venv
-```
-
-Then you can run the script in BIG_DATA_HOME/sh that starts Jupyter on your local machine:
+Then, you can run the script in BIG_DATA_HOME/sh that starts Jupyter on your local machine:
 ```
 > ./sh/runJupyter.sh
 ```
+
 This should open up a page in your web browser showing Jupyter Lab.
