@@ -14,10 +14,8 @@ then
 fi
 
 STARTLOC=`pwd`
-if [ -x data/flightsETL ]
-then
-    cd data/flightsETL
-fi
+mkdir -p data/flightsETL
+cd data/flightsETL
 
 echo "Downloading data: "
 for YEAR in `seq -w ${STARTYEAR} ${ENDYEAR}`
