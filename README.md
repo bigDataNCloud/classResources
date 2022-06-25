@@ -84,15 +84,12 @@ The BIG_DATA_HOME/notebooks directory has notebooks to use with Jupyter. You can
 To inform Jupyter of your own virtual environment, execute the following (assuming your virtual environment is named "bigdata_venv") from within BIG_DATA_HOME:
 ```
 > python -m ipykernel install --name=bigdata_venv
+Installed kernelspec bigdata_venv in /usr/local/share/jupyter/kernels/bigdata_venv
 ```
 
-This command should state something like:
-```
-> Installed kernelspec bigdata_venv in /usr/local/share/jupyter/kernels/bigdata_venv
-```
-
-Then you can run the script in BIG_DATA_HOME/sh that starts Jupyter on your local machine:
+Then, you can run the script in BIG_DATA_HOME/sh that starts Jupyter on your local machine:
 ```
 > ./sh/runJupyter.sh
 ```
+
 This should open up a page in your web browser showing Jupyter Lab.
