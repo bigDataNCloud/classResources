@@ -79,6 +79,16 @@ Installing collected packages: ...
 
 The requirements.txt file contains a list of all the libraries that the code in this repository depends on. If the last command with "pip install -r" fails, you will need to resolve the issue or else some of the code may not run because libraries will be missing. (If it gives a warning, such as to tell you that there is a newer version of pip, you can continue regardless.)
 
+You can _enter_ and _exit_ the virtual Python environment. To enter, do as we did above:
+```
+> source bigdata_env/bin/activate
+```
+
+To exit, execute the deactivate command.
+```
+> deactivate
+```
+
 ## Setting up Jupyter Lab
 The BIG_DATA_HOME/notebooks directory has notebooks to use with Jupyter. You can have Jupyter recognize the code in the python subdirectory and execute it within the python virtual environment that you set up.
 To inform Jupyter of your own virtual environment, execute the following (assuming your virtual environment is named "bigdata_venv") from within BIG_DATA_HOME:
