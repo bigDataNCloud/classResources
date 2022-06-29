@@ -3,9 +3,10 @@
 STARTYEAR=$1
 ENDYEAR=$2
 
+# TODO: Add Comments
 if [ "x${STARTYEAR}x" == "xx" ]
 then
-    STARTYEAR=2018
+    STARTYEAR=2019
 fi
 
 if [ "x${ENDYEAR}x" == "xx" ]

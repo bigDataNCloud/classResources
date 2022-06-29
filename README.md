@@ -1,60 +1,58 @@
 # MGMT 590 Big Data in the Cloud (Krannert, Purdue University)
 
-This repository contains code for labs and demos as well as any resources needed to get started with the class assignments and project.
-You can download the entire set of resources as a zip file or use git to grab the data. 
+This repository contains code for labs and demos as well as any resources needed to get started with the class assignments and projects.
+It is assumed that you will be working primarily from Google Cloud, meaning that the scripts and instructions assume that you have an account in Google Cloud with a project defined and you have linked the credits Google has graciously provided to your project.
 
 ## Directories
+The repository is organized into the following folders:
 * notebooks: Jupyter notebooks
 * sh: home for BASH shell scripts 
 * data: where the shell scripts download data to
-* bigQuerySchemas: table schemas for use with Google Big Query
-* pubSubSchemas: data schemas for use with Google Cloud Pub/Sub
+* schemas/bigQuery: table schemas for use with Google Big Query
+* schemas/pubSub: data schemas for use with Google Cloud Pub/Sub
 * python: Python code
 
 ## Obtaining the Class Resources
-You can download the latest version of the repository [bigDataNCloud/classResources at GitHub](https://github.com/bigDataNCloud/classResources) as a zip file or set up Git on your local machine to synchronize a local repository with the one in GitHub. If you are not familiar with Git, it may be too much to learn all about Git in a short time and you may feel more comfortable going the manual route, but Git is not difficult when you are not contributing to or changing code in the repository.
-
-### Manually Installing by Downloading a Compressed Snapshot
-1. Download the code as a zip file and unzip the file. This will create a folder named classResources-main with all the contents of the zip file expanded.
-1. Move the expanded folder to where you want to install the code, such as to your home directory.
-1. Change directory to be within the code directory. (In my case, I am in $HOME/classResources.) Let's call this folder BIG_DATA_HOME.
-
-### Setting up Git
-You can use git to keep a local copy of the repository in sync with changes in GitHub. You don't need to set up and learn Git to access the resources, though it makes it simpler to synchronize your local copy if there are any changes uploaded to the repository in GitHub.
-If you go this route, you will need to install git on your local machine (or use Google Cloud resources.) GitHub has some tools that can help simplify this process.
-1. Once git is installed, you can clone the repository that is in GitHub. Choose where you want to install the classResources and execute the following:
+The latest version of the repository of code and notes is provided via GitHub at [bigDataNCloud/classResources at GitHub](https://github.com/bigDataNCloud/classResources).
+By using Cloud Shell in Google Cloud, the git utility is already installed and configured.
+Git is a utility that makes it easy to work collaboratively on coding projects.
+You can obtain a copy of the repository (called "cloning") by doing the following from within Cloud Shell:
 ```
 > git clone https://github.com/bigDataNCloud/classResources
 ```
+This will create a subdirectory named classResources with a copy of all of the stuff you see in this repository. 
+Let's refer to the subdirectory "classResources" as BIG_DATA_HOME.
 
-This will create a subdirectory named classResources with a copy of all of the stuff you see in this repository. Let's refer to the subdirectory "classResources" as BIG_DATA_HOME.
-
-1. If new files or updates are made to the GitHub repository, you can update your local repository by going to BIG_DATA_HOME and executing:
+## Updating Your Local Copy of Class Resources
+As new files are added or updates are made to the repository, you can synchronize your local copy by going to BIG_DATA_HOME and executing:
 ```
 > git pull
 ```
 
-There are a myriad of issues that can happen when you update with git if you have made changes to the code you downloaded and the same files have been changed in the GitHub repository. Commit your changes (which commits them to your local repository) and then try updating. Beyond this, there are tons (probably too much?) of help in the internet.
+__NOTE:__ _If you have updating files in your copy of the repository, you will want to commit changes using git before pulling in new edits._
+```
+> git commit -m "Some explanation for why I changed things."
+```
+Typically, your changes will merge without any conflicts unless you are working on the same lines of code that are being updated in GitHub.
 
 BIG_DATA_HOME should look like the directory structure shown in GitHub.
 
 ```
 ❯ ls -l classResources
-total 88
--rw-r--r--  1 barmstrong  staff  35149 Jun 20 17:10 LICENSE
--rw-r--r--  1 barmstrong  staff   4534 Jun 20 17:35 README.md
-drwxr-xr-x  2 barmstrong  staff     64 Jun 20 17:26 data
-drwxr-xr-x  4 barmstrong  staff    128 Jun 24 20:43 notebooks
-drwxr-xr-x  2 barmstrong  staff     64 Jun 20 17:26 python
-drwxr-xr-x  4 barmstrong  staff    128 Jun 20 17:27 sh
+total 56
+-rw-r--r-- 1 krannert_big_data_n_cloud krannert_big_data_n_cloud 35149 Jun 25 19:25 LICENSE
+drwxr-xr-x 2 krannert_big_data_n_cloud krannert_big_data_n_cloud  4096 Jun 25 19:25 notebooks
+drwxr-xr-x 2 krannert_big_data_n_cloud krannert_big_data_n_cloud  4096 Jun 25 19:25 python
+-rw-r--r-- 1 krannert_big_data_n_cloud krannert_big_data_n_cloud  6451 Jun 25 19:25 README.md
+drwxr-xr-x 2 krannert_big_data_n_cloud krannert_big_data_n_cloud  4096 Jun 25 19:44 sh
 ```
 
 ## Setting up a Python Environment
-To be able to use the Python code within the subdirs, I suggest that you set up a Python virtual environment and install the python dependencies within requirements.txt in the outermost directory. 
+To be able to use the provided Python code, we will set up a Python virtual environment and install the python dependencies contained in BIG_DATA_HOME/python/requirements.txt. 
 
-Set up a virtual python environment named "bigdata_venv" from within BIG_DATA_HOME, activate the python environment and install all of the dependencies the code requires.
+, activate the python environment and install all of the dependencies the code requires.
 
-1. Use virtualenv to create a Python sandbox where we will install the Python libraries needed to run our code.
+1. Use virtualenv to set up a virtual python environment named "bigdata_venv" from within BIG_DATA_HOME, which creates a Python sandbox where we will install the Python libraries needed to run the code.
 ```
 > virtualenv -p python3 bigdata_venv
 created virtual environment CPython3.9.2.final.0-64 in 1803ms
@@ -63,11 +61,11 @@ created virtual environment CPython3.9.2.final.0-64 in 1803ms
     added seed packages: pip==22.0.4, setuptools==62.1.0, wheel==0.37.1
   activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
 ```
-2. _Activate_ the Python installation in your new sandbox so that all of the libraries you install will be local to the sandbox.
+2. _Activate_ the Python installation in the newly created sandbox so that all of the libraries we install will be installed locally inside the sandbox.
 ```
 > source bigdata_venv/bin/activate
 ```
-3. Use Python's package manager, pip, to install all of the libraries you will need that are listed in the requirements.txt file from this GitHub repository.
+3. Use Python's package manager, pip, to install all of the libraries in the requirements.txt file.
 ```
 > pip install -r python/requirements.txt
 Collecting anyio==3.3.0
@@ -77,12 +75,13 @@ Collecting anyio==3.3.0
 Installing collected packages: ...
 ```
 
-The requirements.txt file contains a list of all the libraries that the code in this repository depends on. If the last command with "pip install -r" fails, you will need to resolve the issue or else some of the code may not run because libraries will be missing. (If it gives a warning, such as to tell you that there is a newer version of pip, you can continue regardless.)
+The requirements.txt file contains a list of all the libraries that the code in this repository depends on. If the command with "pip install -r" fails, you will need to resolve the issue, or else some of the code may not run because libraries will be missing. (If it gives a warning, such as to tell you that there is a newer version of pip, you can continue regardless.)
 
 You can _enter_ and _exit_ the virtual Python environment. To enter, do as we did above:
 ```
 > source bigdata_env/bin/activate
 ```
+Once entered, all of the Python libraries you installed will be available.
 
 To exit, execute the deactivate command.
 ```
@@ -90,11 +89,14 @@ To exit, execute the deactivate command.
 ```
 
 ## Setting up Jupyter Lab
-The BIG_DATA_HOME/notebooks directory has notebooks to use with Jupyter. You can have Jupyter recognize the code in the python subdirectory and execute it within the python virtual environment that you set up.
-To inform Jupyter of your own virtual environment, execute the following (assuming your virtual environment is named "bigdata_venv") from within BIG_DATA_HOME:
+The BIG_DATA_HOME/notebooks directory has notebooks to use with Jupyter. You can have Jupyter recognize Python code and execute it within a Python virtual environment that you set up (if you install the code on your local machine.)
+
+__NOTE:__ This does not run code in Google Cloud. You can still view the content of the notebooks without actually having to run the code snippets in the notebooks. The following is just for reference if you have Python installed and set up on your local machine and the code downloaded.
+
+To inform Jupyter of your own virtual environment, execute the following (assuming your virtual environment is named "local_venv"):
 ```
-> python -m ipykernel install --name=bigdata_venv
-Installed kernelspec bigdata_venv in /usr/local/share/jupyter/kernels/bigdata_venv
+> python -m ipykernel install --name=local_venv
+Installed kernelspec bigdata_venv in /usr/local/share/jupyter/kernels/local_venv
 ```
 
 Then, you can run the script in BIG_DATA_HOME/sh that starts Jupyter on your local machine:
