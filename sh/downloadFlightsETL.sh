@@ -68,7 +68,7 @@ prepareMonthData() {
 
     echo "Storing..."
     gsutil cp ${YEAR}-${MONTH}.csv gs://${BUCKET}/data/flightsETL/
-
+    rm ${YEAR}-${MONTH}.csv
     return 0
 }
 
