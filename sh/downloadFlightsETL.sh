@@ -32,7 +32,7 @@ else
 	    ENDMONTH=${FIRST}
 	    ENDYEAR=${SECOND}
     else
-	    ENDMONTH=1
+	    ENDMONTH=12
 	    ENDYEAR=${SECOND}
     fi
 fi
@@ -100,25 +100,25 @@ then
     year=${STARTYEAR}
     for (( month=${STARTMONTH}; month <= ${ENDMONTH}; month++ ))
     do
-	echo "prepareMonthData ${month} ${year}"
+	    prepareMonthData ${month} ${year}
     done
 else
     year=${STARTYEAR}
     for (( month=${STARTMONTH}; month <= 12; month++ ))
     do
-	    echo "prepareMonthData ${month} ${year}"
+	    prepareMonthData ${month} ${year}
     done
     for (( year=${STARTYEAR}+1; year <= ${ENDYEAR}-1; year++ ))
     do
-	for (( month=1; month <= 12; month++ ))
-	do
-    	echo "prepareMonthData ${month} ${year}"
-	done
+	    for (( month=1; month <= 12; month++ ))
+	    do
+	        prepareMonthData ${month} ${year}
+	    done
     done
     year=${ENDYEAR}
     for (( month=1; month <= ${ENDMONTH}; month++ ))
     do
-	    echo "prepareMonthData ${month} ${year}"
+	    prepareMonthData ${month} ${year}
     done
 fi
 echo "Uploaded the following to gs://${BUCKET}/data/flightsETL"
