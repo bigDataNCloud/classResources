@@ -1,17 +1,40 @@
 #!/bin/bash
 
-STARTYEAR=$1
-ENDYEAR=$2
+STARTDATE=$1
+ENDDATE=$2
 
-# TODO: Add Comments
-if [ "x${STARTYEAR}x" == "xx" ]
+if [ "x${STARTDATE}x" == "xx" ]
 then
+    STARTMONTH=1
     STARTYEAR=2019
+else
+    FIRST=`echo ${STARTDATE} | cut -d"-" -f1`
+    SECOND=`echo ${STARTDATE} | cut -d"-" -f2`
+    if (( ${FIRST} < 13 ))
+    then
+	    STARTMONTH=${FIRST}
+	    STARTYEAR=${SECOND}
+    else
+	    STARTMONTH=1
+	    STARTYEAR=${SECOND}
+    fi
 fi
 
-if [ "x${ENDYEAR}x" == "xx" ]
+if [ "x${ENDDATE}x" == "xx" ]
 then
-    ENDYEAR=2021
+    ENDMONTH=4
+    ENDYEAR=2022
+else
+    FIRST=`echo ${ENDDATE} | cut -d"-" -f1`
+    SECOND=`echo ${ENDDATE} | cut -d"-" -f2`
+    if (( ${FIRST} < 13 ))
+    then
+	    ENDMONTH=${FIRST}
+	    ENDYEAR=${SECOND}
+    else
+	    ENDMONTH=1
+	    ENDYEAR=${SECOND}
+    fi
 fi
 
 if [ "${CLOUD_SHELL}" != "true" ]
@@ -68,18 +91,35 @@ prepareMonthData() {
 
     echo "Storing..."
     gsutil cp ${YEAR}-${MONTH}.csv gs://${BUCKET}/data/flightsETL/
-    rm ${YEAR}-${MONTH}.csv
+
     return 0
 }
 
-
-for YEAR in `seq -w ${STARTYEAR} ${ENDYEAR}`
-do
-    for MONTH in `seq 1 12`
+if (( ${STARTYEAR} == ${ENDYEAR} ))
+then
+    year=${STARTYEAR}
+    for (( month=${STARTMONTH}; month <= ${ENDMONTH}; month++ ))
     do
-	prepareMonthData ${MONTH} ${YEAR}
+	echo "prepareMonthData ${month} ${year}"
     done
-done
-
+else
+    year=${STARTYEAR}
+    for (( month=${STARTMONTH}; month <= 12; month++ ))
+    do
+	    echo "prepareMonthData ${month} ${year}"
+    done
+    for (( year=${STARTYEAR}+1; year <= ${ENDYEAR}-1; year++ ))
+    do
+	for (( month=1; month <= 12; month++ ))
+	do
+    	echo "prepareMonthData ${month} ${year}"
+	done
+    done
+    year=${ENDYEAR}
+    for (( month=1; month <= ${ENDMONTH}; month++ ))
+    do
+	    echo "prepareMonthData ${month} ${year}"
+    done
+fi
 echo "Uploaded the following to gs://${BUCKET}/data/flightsETL"
 gsutil ls -l gs://${BUCKET}/data/flightsETL
