@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# This will run Jupyter
 for codeDir in `find . -name "python" | grep -v "venv" | cut -d/ -f2-`; do
     if [ "x${PYTHONPATH}x" == "xx" ]; then
 	export PYTHONPATH=`pwd`/${codeDir}
