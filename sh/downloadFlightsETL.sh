@@ -29,11 +29,11 @@ else
     SECOND=`echo ${ENDDATE} | cut -d"-" -f2`
     if (( ${FIRST} < 13 ))
     then
-	STARTMONTH=${FIRST}
-	STARTYEAR=${SECOND}
+	    ENDMONTH=${FIRST}
+	    ENDYEAR=${SECOND}
     else
-	STARTMONTH=1
-	STARTYEAR=${SECOND}
+	    ENDMONTH=12
+	    ENDYEAR=${SECOND}
     fi
 fi
 
@@ -91,7 +91,7 @@ prepareMonthData() {
 
     echo "Storing..."
     gsutil cp ${YEAR}-${MONTH}.csv gs://${BUCKET}/data/flightsETL/
-    rm -f ${YEAR}-${MONTH}.csv
+    rm -f ${YEAR}-${MONTH}.csv # This is the missing line!
     return 0
 }
 
@@ -100,25 +100,25 @@ then
     year=${STARTYEAR}
     for (( month=${STARTMONTH}; month <= ${ENDMONTH}; month++ ))
     do
-	echo "prepareMonthData ${MONTH} ${YEAR}"
+	prepareMonthData ${month} ${year}
     done
 else
     year=${STARTYEAR}
     for (( month=${STARTMONTH}; month <= 12; month++ ))
     do
-	echo "prepareMonthData ${MONTH} ${YEAR}"
+	    prepareMonthData ${month} ${year}
     done
     for (( year=${STARTYEAR}+1; year <= ${ENDYEAR}-1; year++ ))
     do
-	for (( month=1; month <= 12; month++ ))
-	do
-	    echo "prepareMonthData ${MONTH} ${YEAR}"
-	done
+	    for (( month=1; month <= 12; month++ ))
+	    do
+	        prepareMonthData ${month} ${year}
+	    done
     done
     year=${ENDYEAR}
     for (( month=1; month <= ${ENDMONTH}; month++ ))
     do
-	echo "prepareMonthData ${MONTH} ${YEAR}"
+	prepareMonthData ${month} ${year}
     done
 fi
 echo "Uploaded the following to gs://${BUCKET}/data/flightsETL"
