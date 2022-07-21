@@ -22,7 +22,7 @@ then
   mkdir /tmp/${FUNCTION}_zip
   cd /tmp/${FUNCTION}_zip
   cp ${HOME}/${CODE_HOME}/python/requirements_${FUNCTION}.txt requirements.txt
-  cp ${HOME}/${CODE_HOME}/python/${FUNCTION}.py main.py
+  cp ${HOME}/${CODE_HOME}/python/main_${FUNCTION}.py main.py
   mkdir flight
   cp -r ${HOME}/${CODE_HOME}/python/flight/stream flight
   # Create a folder that contains all the files needed for the Cloud Function:
