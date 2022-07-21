@@ -382,6 +382,9 @@ def parse(request,credentials=None):
     topic=messageJSON.get('topic', '')
     topic=topic.strip()
     if topic=='': topic = None
+  else:
+    projectId=None
+    topic=None
 
   if store:
     bucket=messageJSON.get('bucket', '')
@@ -391,6 +394,9 @@ def parse(request,credentials=None):
     path=messageJSON.get('path', '')
     path=path.strip()
     if path=='': path=None
+  else:
+    bucket=None
+    path=None
   
   separateLines = 'separateLines' in messageJSON
   limit = messageJSON.get('limit',None)
