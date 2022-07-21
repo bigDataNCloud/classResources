@@ -2,7 +2,7 @@ import functions_framework
 from flight.stream.openSkyParser import parse
 
 @functions_framework.http
-def runner(request):
+def flightStreaming(request):
   """HTTP Cloud Function.
   Args:
       request (flask.Request): The request object.

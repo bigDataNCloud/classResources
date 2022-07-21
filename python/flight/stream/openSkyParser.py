@@ -12,7 +12,7 @@
 #   (Make sure to set your PYTHONPATH to include the code, such as the following for a LINUX system, such as from Cloud Shell:
 #      export PYTHONPATH=~/classResources/python
 #   )
-#   python ~/classResources/python/flight/stream/flightStreamingRunner.py -log -storage
+#   python ~/classResources/python/flight/stream/main_flight-streaming.py -log -storage
 # Use the following tests from the Cloud Function UI:
 #   Write to Google Storage and publish to a Pub/Sub queue simultaneously:
 #      {"storage":true,"pubsub":true,"limit":10}
