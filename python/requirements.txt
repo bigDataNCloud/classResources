@@ -9,6 +9,7 @@ beautifulsoup4==4.9.3
 bleach==3.3.1
 cachetools==4.2.2
 certifi==2021.5.30
+functions-framework==3.*
 cffi==1.14.6
 chardet==3.0.4
 charset-normalizer==2.0.2
