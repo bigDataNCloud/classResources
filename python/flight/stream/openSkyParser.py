@@ -53,7 +53,7 @@ class RequestTemplate(object):
   def __init__(self,
                query='',limit=None,debug=False,separateLines=True,
                projectId='',topic='',
-               bucket='',path=''):
+               bucket='',path='',storage=False,pubsub=False):
     if query is not None:
       if type(query) == str:
         if not query.startswith('"'): query = '"' + query + '"'
@@ -61,7 +61,8 @@ class RequestTemplate(object):
         query = json.dumps(query)
     else:
       query=''
-    message = {'query': query, 'limit': limit if limit is not None else '',
+    message = {'storage':storage,'pubsub':pubsub,
+               'query': query, 'limit': limit if limit is not None else '',
                'projectId': projectId,
                'topic': topic if topic is not None else '',
                'bucket': bucket if bucket is not None else '',
@@ -370,21 +371,26 @@ def parse(request,credentials=None):
     debug = None
   else:
     _logger.setLevel(debug)
-  projectId=messageJSON.get('projectId','')
-  projectId=projectId.strip()
-  if len(projectId)==0: projectId=None
-  
-  topic=messageJSON.get('topic', '')
-  topic=topic.strip()
-  if topic=='': topic = None
+  store=messageJSON.get('storage',False)
+  publish=messageJSON.get('pubsub',False)
 
-  bucket=messageJSON.get('bucket', '')
-  bucket=bucket.strip()
-  if bucket=='': bucket=None
+  if publish:
+    projectId=messageJSON.get('projectId','')
+    projectId=projectId.strip()
+    if len(projectId)==0: projectId=None
   
-  path=messageJSON.get('path', '')
-  path=path.strip()
-  if path=='': path=None
+    topic=messageJSON.get('topic', '')
+    topic=topic.strip()
+    if topic=='': topic = None
+
+  if store:
+    bucket=messageJSON.get('bucket', '')
+    bucket=bucket.strip()
+    if bucket=='': bucket=None
+    
+    path=messageJSON.get('path', '')
+    path=path.strip()
+    if path=='': path=None
   
   separateLines = 'separateLines' in messageJSON
   limit = messageJSON.get('limit',None)
@@ -396,9 +402,9 @@ def parse(request,credentials=None):
   if limit is None: limit=defaultLimit
   
   _logger.info(json.dumps({'log': 'Parsed message is ' + json.dumps(messageJSON)}))
-  if topic is not None:
+  if publish:
     _logger.info(json.dumps({'log':'Will publish to projectID:{project} topic:{topic}'.format(project=projectId,topic=topic)}))
-  if bucket is not None:
+  if store:
     _logger.info(json.dumps({'log':'Will store in GCS at bucket:{bucket} path:{path}'.format(bucket=bucket,path=path)}))
   numProcessed=_scavengeRows(separateLines=separateLines,
                 bucket=bucket,path=path,
@@ -452,9 +458,11 @@ if __name__ == '__main__':
   requestArgs['limit']=args.limit
   projectId=defaultProjectId if args.projectId is None else args.projectId
   if args.pubsub:
+    requestArgs['pubsub']=args.pubsub
     requestArgs['projectId']=args.projectId
     requestArgs['topic']=args.topic
   if args.storage:
+    requestArgs['storage']=args.storage
     requestArgs['path']=args.path
     requestArgs['bucket']=args.bucket if args.bucket is not None else projectId+'_data'
   exampleRequest = RequestTemplate(**requestArgs)
