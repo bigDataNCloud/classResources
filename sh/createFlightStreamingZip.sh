@@ -13,10 +13,10 @@ then
   rm -rf /tmp/flightStreamingFunctionZip
   mkdir /tmp/flightStreamingFunctionZip
   cd /tmp/flightStreamingFunctionZip
-  cp ${CODE_HOME}/python/requirements_flightStreamingRunner.txt requirements.txt
-  cp ${CODE_HOME}/python/flightStreamingRunner.py .
+  cp ${HOME}/${CODE_HOME}/python/requirements_flightStreamingRunner.txt requirements.txt
+  cp ${HOME}/${CODE_HOME}/python/flightStreamingRunner.py .
   mkdir flight
-  cp -r ${CODE_HOME}/python/flight/stream flight
+  cp -r ${HOME}/${CODE_HOME}/python/flight/stream flight
   # Create a folder that contains all the files needed for the Cloud Function:
   #   requirements... -- lists the libraries and versions the code depends on.
   #   flightStreamingRunner.py -- the entry point for the Cloud Function to call when triggered.
