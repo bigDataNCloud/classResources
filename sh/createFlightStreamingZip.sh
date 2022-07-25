@@ -1,11 +1,16 @@
 #!/bin/bash
 
 FUNCTION=$1
-if [ ! -z ${FUNCTION} ]
+BUCKET=$2
+if [ -z ${FUNCTION} ]
 then
   echo "Must provide the function name (which must also match the requirements-FUNCTION.txt and main_FUNCTION.py file names.)"
 fi
-echo "Creating a Cloud Function zip for ${FUNCTION}"
+if [ -z ${BUCKET} ]
+then
+  BUCKET=${GOOGLE_CLOUD_PROJECT}_data
+fi
+echo "Creating a Cloud Function zip for ${FUNCTION}. Will store the zip file in gs://${BUCKET}/function/"
 
 ORIG_PWD=`pwd`
 # Navigate to the root folder of the code.
@@ -31,8 +36,8 @@ then
   #   flight/stream/* -- the code
   zip -r ../${FUNCTION}.zip .
   #   outputs a zip file in ${CODE_HOME}.
-  gsutil cp ../${FUNCTION}.zip gs://${GOOGLE_CLOUD_PROJECT}_data/function/
-  echo "Uploaded ${FUNCTION}.zip to the function directory in the ${GOOGLE_CLOUD_PROJECT}_data bucket."
+  gsutil cp ../${FUNCTION}.zip gs://${BUCKET}/function/
+  echo "Uploaded ${FUNCTION}.zip to the function directory in the ${BUCKET} bucket."
 else
   echo "Cannot locate the classResources directory."
 fi
