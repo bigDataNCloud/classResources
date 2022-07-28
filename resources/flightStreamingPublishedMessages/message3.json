@@ -1,0 +1,20 @@
+{
+  "altitude": 236.22,
+  "baro_altitude": 213.36,
+  "callsign": "N2069M",
+  "contact": 1658952987,
+  "contact_bq": "2022-07-27 20:16:27",
+  "heading": 354.75,
+  "icao24": "a1abec",
+  "latitude": 34.2107,
+  "longitude": -119.0373,
+  "on_ground": false,
+  "origin": "United States",
+  "position_source": 0,
+  "query_time_bq": "2022-07-27 20:16:34",
+  "spi": false,
+  "time": 1658952987,
+  "time_bq": "2022-07-27 20:16:27",
+  "velocity": 44.95,
+  "vertical_rate": 2.93
+}

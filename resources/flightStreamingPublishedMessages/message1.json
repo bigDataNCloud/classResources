@@ -1,0 +1,14 @@
+{
+  "callsign": "",
+  "contact": 1658952938,
+  "contact_bq": "2022-07-27 20:15:38",
+  "heading": 189.07,
+  "icao24": "e8027c",
+  "on_ground": false,
+  "origin": "Chile",
+  "position_source": 0,
+  "query_time_bq": "2022-07-27 20:16:34",
+  "spi": false,
+  "velocity": 234.95,
+  "vertical_rate": -0.33
+}

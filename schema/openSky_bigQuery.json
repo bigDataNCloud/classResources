@@ -1,122 +1,116 @@
 [
     {
-        "name": "event_timestamp",
-        "type": "TIMESTAMP",
-        "description": "Pub/Sub event timestamp",
-        "mode": "REQUIRED"
-    },
-    {
         "name": "squawk",
-        "description": "",
+        "description": "The transponder code aka Squawk. Can be null.",
         "mode": "NULLABLE",
-        "type": "INT64"
+        "type": "INTEGER"
     },
     {
         "name": "spi",
-        "description": "",
+        "description": "Whether flight status indicates special purpose indicator.",
         "mode": "NULLABLE",
-        "type": "BOOL"
+        "type": "BOOLEAN"
     },
     {
         "name": "baro_altitude",
-        "description": "",
+        "description": "Barometric altitude in meters. Can be null.",
         "mode": "NULLABLE",
-        "type": "FLOAT64"
+        "type": "FLOAT"
     },
     {
         "name": "vertical_rate",
-        "description": "",
+        "description": "Vertical rate in m/s. A positive value indicates that the airplane is climbing, a negative value indicates that it descends. Can be null.",
         "mode": "NULLABLE",
-        "type": "FLOAT64"
+        "type": "FLOAT"
     },
     {
         "name": "icao24",
-        "description": "",
+        "description": "Unique ICAO 24-bit address of the transponder in hex string representation.",
         "mode": "NULLABLE",
         "type": "STRING"
     },
     {
         "name": "on_ground",
-        "description": "",
+        "description": "Boolean value which indicates if the position was retrieved from a surface position report.",
         "mode": "NULLABLE",
-        "type": "BOOL"
+        "type": "BOOLEAN"
     },
     {
         "name": "heading",
-        "description": "",
+        "description": "True track in decimal degrees clockwise from north (north=0°). Can be null.",
         "mode": "NULLABLE",
-        "type": "FLOAT64"
+        "type": "FLOAT"
     },
     {
         "name": "position_source",
-        "description": "",
+        "description": "Origin of this state’s position. 0 = ADS-B, 1 = ASTERIX, 2 = MLAT, 3 = FLARM",
         "mode": "NULLABLE",
-        "type": "INT64"
+        "type": "INTEGER"
     },
     {
         "name": "velocity",
-        "description": "",
+        "description": "Velocity over ground in m/s. Can be null.",
         "mode": "NULLABLE",
-        "type": "FLOAT64"
+        "type": "FLOAT"
     },
     {
         "name": "longitude",
-        "description": "",
+        "description": "WGS-84 longitude in decimal degrees. Can be null.",
         "mode": "NULLABLE",
-        "type": "FLOAT64"
+        "type": "FLOAT"
     },
     {
         "name": "altitude",
-        "description": "",
+        "description": "Barometric altitude in meters. Can be null.",
         "mode": "NULLABLE",
-        "type": "FLOAT64"
+        "type": "FLOAT"
     },
     {
         "name": "latitude",
-        "description": "",
+        "description": "WGS-84 latitude in decimal degrees. Can be null.",
         "mode": "NULLABLE",
-        "type": "FLOAT64"
+        "type": "FLOAT"
     },
     {
         "name": "callsign",
-        "description": "",
+        "description": "Callsign of the vehicle (8 chars). Can be null if no callsign has been received.",
+        "mode": "NULLABLE",
+        "type": "STRING"
+    },
+    {
+        "name": "origin",
+        "description": "Country name inferred from the ICAO 24-bit address.",
         "mode": "NULLABLE",
         "type": "STRING"
     },
     {
         "name": "time",
-        "description": "",
-        "mode": "NULLABLE",
-        "type": "INT64"
-    },
-    {
-        "name": "contact",
-        "description": "",
-        "mode": "NULLABLE",
-        "type": "INT64"
-    },
-    {
-        "name": "origin",
-        "description": "",
+        "description": "Unix timestamp (seconds) for the last position update. Can be null if no position report was received by OpenSky within the past 15s.",
         "mode": "NULLABLE",
         "type": "STRING"
     },
     {
         "name": "time_bq",
-        "description": "",
+        "description": "The time field formatted for consumption as a TIMESTAMP datatype for Big Query.",
+        "mode": "NULLABLE",
+        "type": "TIMESTAMP"
+    },
+    {
+        "name": "contact",
+        "description": "Unix timestamp (seconds) for the last update in general. This field is updated for any new, valid message received from the transponder.",
         "mode": "NULLABLE",
         "type": "STRING"
     },
     {
         "name": "contact_bq",
-        "description": "",
+        "description": "The contact field formatted for consumption as a TIMESTAMP datatype for Biq Query.",
         "mode": "NULLABLE",
-        "type": "STRING"
+        "type": "TIMESTAMP"
     },
     {
         "name": "query_time_bq",
-        "description": "",
+        "description": "Time OpenSky was queried.",
         "mode": "NULLABLE",
-        "type": "STRING"
+        "type": "TIMESTAMP"
     }
 ]

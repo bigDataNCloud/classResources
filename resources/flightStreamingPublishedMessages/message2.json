@@ -1,0 +1,20 @@
+{
+  "altitude": 3642.36,
+  "baro_altitude": 3436.62,
+  "callsign": "N759PA",
+  "contact": 1658952745,
+  "contact_bq": "2022-07-27 20:12:25",
+  "heading": 357.61,
+  "icao24": "aa3cbe",
+  "latitude": 42.0476,
+  "longitude": -111.992,
+  "on_ground": false,
+  "origin": "United States",
+  "position_source": 0,
+  "query_time_bq": "2022-07-27 20:16:34",
+  "spi": false,
+  "time": 1658952745,
+  "time_bq": "2022-07-27 20:12:25",
+  "velocity": 49.43,
+  "vertical_rate": 1.95
+}
