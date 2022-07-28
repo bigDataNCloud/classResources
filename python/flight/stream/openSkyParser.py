@@ -15,11 +15,20 @@
 #   python ~/classResources/python/flight/stream/main_flight-streaming.py -log -storage
 # Use the following tests from the Cloud Function UI:
 #   Write to Google Storage and publish to a Pub/Sub queue simultaneously:
-#      {"storage":true,"pubsub":true,"limit":10}
+#   {
+#        "storage":true,
+#        "bucket":"prof-big-data_data",
+#        "path":"flight-streaming-demo",
+#        "pubsub":true,
+#        "topic":"flight-streaming-demo-topic",
+#        "projectId":"prof-big-data",
+#        "separateLines":true
+#   }
 #   If you only want to publish messages to Pub/Sub and want to specify a topic and project:
-#      {"pubsub":true,"topic":"my-topic","projectId":"my-project"}
+#      {"pubsub":true,"topic":"flight-stream","projectId":"prof-big-data"}
 #   If you only want to write to GCS and want to specify a bucket and path.
-#      {"storage":true,"bucket":"my-bucket","path":"my-path"}
+#      {"storage":true,"bucket":"prof-big-data_data","path":"flight-streaming","separateLines":true,"limit":10}
+
 
 # OpenSky API is provided free of charge for non-commercial use.
 # See: https://opensky-network.org/
@@ -219,7 +228,7 @@ class Publish(object):
     else:
       key=self._createKey()
       try:
-        self._publisher.publish(self._topicPath, data=('\n'.rows).encode('utf-8'), query=self._createKey())
+        self._publisher.publish(self._topicPath, data=('\n'.join(rows)).encode('utf-8'), query=self._createKey())
       except:
         _logger.error('Error publishing {key} to {topic}'.format(key=key, topic=self._topicPath),exc_info=True,stack_info=True)
 
@@ -332,7 +341,7 @@ def _scavengeRows(separateLines=False,
         try:
           # If the record has at least one non-empty field, process it.
           records.append(trimmedRecord)
-        except Exception as ex:
+        except:
           _logger.error('ERROR cannot process record.',exc_info=True,stack_info=True)
       if limit is not None and len(records)>limit: break
     
@@ -361,6 +370,9 @@ def _scavengeRows(separateLines=False,
 def parse(request,credentials=None):
   """Responds to any HTTP request.
   :request (flask.Request): HTTP request object, the request passed into a Cloud Function when triggered.
+  :credentials: a dict with projectId, token_uri, and client_email. I haven't updated this and don't have a working
+                example of how to pass in credentials. If the parser is called from within a Google Cloud service that
+                has credentials associated with it, then you don't need to explicitly specify credentials.
   :return: returns the response text or any set of values that can be turned into a Response object using
            `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
   """
@@ -383,7 +395,9 @@ def parse(request,credentials=None):
     topic=topic.strip()
     if topic=='': topic = None
   else:
-    projectId=None
+    projectId=messageJSON.get('projectId','')
+    projectId=projectId.strip()
+    if len(projectId)==0: projectId=None
     topic=None
 
   if store:
@@ -451,7 +465,7 @@ if __name__ == '__main__':
   # parse the arguments
   args = parser.parse_args()
   
-  credentials=None
+  credentials={}
   if args.credentials is not None:
     try:
       with open(args.credentials) as credentialsContent:
@@ -463,9 +477,9 @@ if __name__ == '__main__':
   requestArgs['query']=args.query
   requestArgs['limit']=args.limit
   projectId=defaultProjectId if args.projectId is None else args.projectId
+  requestArgs['projectId']=args.projectId
   if args.pubsub:
     requestArgs['pubsub']=args.pubsub
-    requestArgs['projectId']=args.projectId
     requestArgs['topic']=args.topic
   if args.storage:
     requestArgs['storage']=args.storage
