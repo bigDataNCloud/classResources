@@ -110,7 +110,7 @@ def parseAll(allStocksFile,bucket,path,period,interval):
     try:
       cleanedSymbol=symbol.strip()
       _logger.debug('Parsing '+cleanedSymbol)
-      action=lambda data: _store(bucket,path+'/'+cleanedSymbol+'.csv',data)
+      action=lambda data: _store(bucket,'{path}/symbol={symbol}/{symbol}.csv'.format(path=path,symbol=cleanedSymbol),data)
       _parse(cleanedSymbol,period,interval,action)
       numStocks+=1
     except:
