@@ -258,6 +258,7 @@ if __name__ == '__main__':
   parser.add_argument('-topic',default=None)
   parser.add_argument('-storage',action='store_true')
   parser.add_argument('-publish',action='store_true')
+  parser.add_argument('-addTimestamp',action='store_true')
   args = parser.parse_args()
   projectId=os.environ.get('GOOGLE_CLOUD_PROJECT','no_project') if args.projectId is None else args.projectId
   bucket=projectId+'_data' if args.bucket is None else args.bucket
