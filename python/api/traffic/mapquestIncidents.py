@@ -54,7 +54,7 @@ def _store(bucket, path, data):
   Returns:
   '''
   try:
-    return _getStorageClient(bucket).blob(path).upload_from_string(data.to_csv())
+    return _getStorageClient(bucket).blob(path).upload_from_string(data)
   except:
     _logger.error('Cannot write to '+path+' in '+bucket, exc_info=True, stack_info=True)
 
@@ -62,7 +62,7 @@ def _publishOneRow(pubsubClient,topicPath,row):
   cleaned=row.strip()
   if len(cleaned)>0:
     # Don't publish an empty message.
-    return pubsubClient.publish(topicPath, row.encode())  # Encode the data as bytes.
+    return pubsubClient.publish(topicPath, cleaned.encode())  # Encode the data as bytes.
   return None
 
 def _publish(projectId, topic, data, additional=None):
@@ -83,6 +83,10 @@ def _publish(projectId, topic, data, additional=None):
     if type(data)==str:
       if additional is not None: data+=additional
       future=_publishOneRow(pubsubClient,topicPath,data)
+      if future is not None: publishingFutures.append(future)
+    elif type(data)==dict:
+      data['additional']=additional
+      future=_publishOneRow(pubsubClient,topicPath,json.dumps(data))
       if future is not None: publishingFutures.append(future)
     elif type(data) in [list,tuple,set]:
       for row in data:
@@ -261,15 +265,20 @@ if __name__=='__main__':
   parser.add_argument('-topic',default=None)
   parser.add_argument('-storage',action='store_true')
   parser.add_argument('-pubsub',action='store_true')
+  parser.add_argument('-addTimestamp',action='store_true')
   args=parser.parse_args()
   projectId=os.environ.get('GOOGLE_CLOUD_PROJECT', 'no_project') if args.projectId is None else args.projectId
   bucket=projectId+'_data' if args.bucket is None else args.bucket
   key=args.key
   filters=args.filters
-  bounds=args.bounds
+  givenBounds=args.bounds
+  bounds=((givenBounds[0], givenBounds[1]), (givenBounds[2], givenBounds[3]))
   path=args.path
   topic=args.topic
-  store=False if bucket is None else args.store
-  publish=False if topic is None else args.publish
+  store=False if bucket is None else args.storage
+  publish=False if topic is None else args.pubsub
+  if args.addTimestamp:
+    # Append a timestamp to the path so that we don't overwrite an existing set of files.
+    path+='/timestamp='+datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
   num=parseAll(key, bounds, filters, bucket=bucket, path=path, projectId=projectId, topic=topic,
                store=store, publish=publish)
