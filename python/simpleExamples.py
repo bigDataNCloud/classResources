@@ -1,5 +1,5 @@
 from google.cloud import storage
-from google.cloud.pubsub_v1 import PublisherClient,SubscriberClient,DeleteSubscriptionRequest
+from google.cloud.pubsub_v1 import PublisherClient,SubscriberClient
 
 def downloadFromStorage(bucketName,pathInBucket):
   storageClient=storage.Client()
@@ -36,7 +36,7 @@ def subscribe(projectId,topicName,subscriptionName,duration=60):
   subscriptionPath='projects/'+projectId+'/subscriptions/'+subscriptionName
   
   with SubscriberClient() as subscriber:
-    subscriber.create_subscription(name=subscriptionPath, topic=topicPath)
+    subscriber.create_subscription(subscription=subscriptionPath, topic=topicPath)
     future=subscriber.subscribe(subscriptionPath, _readMessage)
     future.result(timeout=duration) # Wait and read messages for duration seconds.
     subscriber.delete_subscription(subscription=subscriptionPath) # Delete the subscription we just created.
