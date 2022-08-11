@@ -1,5 +1,6 @@
 from google.cloud import storage
 from google.cloud.pubsub_v1 import PublisherClient,SubscriberClient
+from concurrent.futures._base import TimeoutError
 
 def downloadFromStorage(bucketName,pathInBucket):
   storageClient=storage.Client()
@@ -36,9 +37,12 @@ def subscribe(projectId,topicName,subscriptionName,duration=60):
   subscriptionPath='projects/'+projectId+'/subscriptions/'+subscriptionName
   
   with SubscriberClient() as subscriber:
-    subscriber.create_subscription(subscription=subscriptionPath, topic=topicPath)
+    subscriber.create_subscription(name=subscriptionPath, topic=topicPath)
     future=subscriber.subscribe(subscriptionPath, _readMessage)
-    future.result(timeout=duration) # Wait and read messages for duration seconds.
+    try:
+      future.result(timeout=duration) # Wait and read messages for duration seconds.
+    except TimeoutError:
+      print('Stopped waiting for messages since no new messages were published after '+str(duration)+'s.')
     subscriber.delete_subscription(subscription=subscriptionPath) # Delete the subscription we just created.
 
 # Example: Read text data from storage.
@@ -60,3 +64,7 @@ publish(projectId,myTopic,'What a wonderful bird the frog are.')
 # for any other subscribers.)
 # Also, you will need to publish data to the topic after you create the subscription and before the timeout.
 subscribe(projectId,myTopic,'myTestSubscription')
+
+print('Retrieved '+str(len(subscriptionData))+' messages: ')
+for message in subscriptionData:
+  print(message)
