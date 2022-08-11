@@ -15,17 +15,48 @@
 # You can test out this code from the command-line:
 #   Make sure to set your PYTHONPATH to include the code, such as the following for a LINUX system, such as from Cloud Shell:
 #      PYTHONPATH=~/classResources/python python ~/classResources/python/api/stocks/yahooFinance.py -projectId prof-big-data -bucket prof-big-data_data -path week-of-stocks -interval 7d -period 1d
-# Use the following tests from the Cloud Function UI:
-#   Write to Google Storage and publish to a Pub/Sub queue simultaneously:
-#   {
-#        "debug":10,
-#        "bucket":"prof-big-data_data",
-#        "path":"stocks",
-#        "projectId":"prof-big-data",
-#        "interval":"1d",
-#        "period":"7d",
-#        "addTimestamp":"true"
-#   }
+# The following messages can be used to trigger a cloud function with this code.
+
+test=[
+  # Use the following to only write to storage:
+  {
+    "debug":10,
+    "bucket":"prof-big-data_data",
+    "path":"stocks",
+    "projectId":"prof-big-data",
+    "interval":"1d",
+    "period":"7d",
+    "addTimestamp":"true",
+    "storage":"true"
+  },
+  
+  # Use the following to only publish to Pub/Sub:
+  {
+     "debug":10,
+     "bucket":"prof-big-data_data",
+     "path":"stocks",
+     "projectId":"prof-big-data",
+     "interval":"1d",
+     "period":"7d",
+     "addTimestamp":"true",
+     "topic":"stocks-topic",
+     "pubsub":"true"
+  },
+  
+  # Use the following to both write to storage and publish to Pub/Sub:
+  {
+     "debug":10,
+     "bucket":"prof-big-data_data",
+     "path":"stocks2",
+     "projectId":"prof-big-data",
+     "interval":"1d",
+     "period":"7d",
+     "addTimestamp":"true",
+     "storage":"true",
+     "topic":"stocks-topic",
+     "pubsub":"true"
+  }
+]
 
 import yfinance as yf
 from argparse import ArgumentParser
@@ -67,22 +98,32 @@ def _store(bucket,path,data):
   Returns:
   '''
   try:
-    return _getStorageClient(bucket).blob(path).upload_from_string(data.to_csv())
+    return _getStorageClient(bucket).blob(path).upload_from_string(data)
   except:
     _logger.error('Cannot write to '+path+' in '+bucket,exc_info=True,stack_info=True)
 
-def _publish(projectId,topic,data):
+def _publish(projectId,topic,data,additional=None):
   '''
   An action that writes the data to the given topic.
   Args:
     projectId:
     topic:
-    data:
-  Returns:
+    data: a string consisting of lines to publish as separate messages. The first line is assumed to be a header.
+    additional: any additional text to add to the end of the line. If data is comma-delimited, then don't forget to add a comma to addtional,
+                such as _publish(..., additional=",SYMBOL" )
   '''
   try:
-    pass
-    # NOT YET IMPLEMENTED
+    pubsubClient=PublisherClient()
+    topicPath='projects/'+projectId+'/topics/'+topic
+    publishingFutures=[] # Will collect all the future publish calls in this list.
+    for row in data.split('\n')[1:]:  # Split will break out each line as a separate row. [1:] will skip the header row.:
+      cleaned=row.strip()
+      if additional is not None: cleaned+=additional
+      if len(cleaned)>0:
+        # Don't publish an empty message.
+        publishingFutures.append(pubsubClient.publish(topicPath,cleaned.encode())) # Encode the data as bytes.
+    for publishing in publishingFutures:
+      publishing.result() # Calling the result() method will cause the future command to actually execute if it hasn't already done so.
   except:
     _logger.error('Cannot publish to '+topic,exc_info=True,stack_info=True)
     
@@ -96,9 +137,11 @@ def _parse(stock,period,interval,action):
     action: a function that takes the data returned by the API and acts on it.
   Returns:
   '''
-  return action(yf.download(tickers=stock, period=period, interval=interval))
+  yahooResponse=yf.download(tickers=stock, period=period, interval=interval)
+  data=yahooResponse.to_csv()
+  return action(data)
 
-def parseAll(allStocksFile,bucket,path,period,interval):
+def parseAll(allStocksFile,period,interval,bucket=None,path=None,projectId=None,topic=None,store=True,publish=True):
   numStocks=0
   stocksFileContents=_getStorageClient(bucket).blob(_allStocksFile)
   if stocksFileContents.exists():
@@ -110,8 +153,11 @@ def parseAll(allStocksFile,bucket,path,period,interval):
     try:
       cleanedSymbol=symbol.strip()
       _logger.debug('Parsing '+cleanedSymbol)
-      action=lambda data: _store(bucket,'{path}/symbol={symbol}/{symbol}.csv'.format(path=path,symbol=cleanedSymbol),data)
-      _parse(cleanedSymbol,period,interval,action)
+      actions=[]
+      if store: actions.append(lambda data: _store(bucket,'{path}/symbol={symbol}/{symbol}.csv'.format(path=path,symbol=cleanedSymbol),data))
+      if publish: actions.append(lambda data: _publish(projectId,topic,data,additional=','+cleanedSymbol))
+      for action in actions:
+        _parse(cleanedSymbol,period,interval,action)
       numStocks+=1
     except:
       _logger.error('Cannot parse stocks for symbol '+symbol)
@@ -182,12 +228,16 @@ def entry(request):
   period=message.get('period','10y')
   interval=message.get('interval','1d')
   addTimestamp=message.get('addTimestamp',None)
+  topic=message.get('topic',None)
+  store=message.get('storage',False)
+  publish=message.get('pubsub',False)
+  if not publish and not store: store=True
   if addTimestamp=='true':
     # Append a timestamp to the path so that we don't overwrite an existing set of files.
     path+='/timestamp='+datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
   _logger.info('Will parse all stocks in '+_allStocksFile+' for the period of '+period+' at the interval of '+interval+
                ', storing in path '+path+' of bucket '+bucket+', projectId='+str(projectId))
-  numParsed=parseAll(_allStocksFile,bucket,path,period,interval)
+  numParsed=parseAll(_allStocksFile,period,interval,bucket=bucket,path=path,projectId=projectId,topic=topic,store=store,publish=publish)
   return 'Completed parsing '+str(numParsed)+' stocks.'
 
 if __name__ == '__main__':
@@ -205,7 +255,21 @@ if __name__ == '__main__':
   parser.add_argument('-period',default='10y')
   parser.add_argument('-interval',default='1d')
   parser.add_argument('-projectId',default=None)
+  parser.add_argument('-topic',default=None)
+  parser.add_argument('-storage',action='store_true')
+  parser.add_argument('-publish',action='store_true')
   args = parser.parse_args()
   projectId=os.environ.get('GOOGLE_CLOUD_PROJECT','no_project') if args.projectId is None else args.projectId
   bucket=projectId+'_data' if args.bucket is None else args.bucket
-  parseAll(_allStocksFile,args.bucket,args.path,args.period,args.interval)
+  addTimestamp=args.addTimestamp
+  topic=args.topic
+  path=args.path
+  period=args.period
+  interval=args.interval
+  if args.addTimestamp:
+    # Append a timestamp to the path so that we don't overwrite an existing set of files.
+    path+='/timestamp='+datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+  _logger.info('Will parse all stocks in '+_allStocksFile+' for the period of '+period+' at the interval of '+interval+
+               ', storing in path '+path+' of bucket '+bucket+', projectId='+str(projectId))
+  parseAll(_allStocksFile,args.period,args.interval,bucket=args.bucket,path=args.path,projectId=projectId,topic=args.topic,
+           store=args.storage,publish=args.publish)
