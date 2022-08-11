@@ -85,7 +85,7 @@ def _publish(projectId, topic, data, additional=None):
       future=_publishOneRow(pubsubClient,topicPath,data)
       if future is not None: publishingFutures.append(future)
     elif type(data)==dict:
-      data['additional']=additional
+      if additional is not None: data['additional']=additional
       future=_publishOneRow(pubsubClient,topicPath,json.dumps(data))
       if future is not None: publishingFutures.append(future)
     elif type(data) in [list,tuple,set]:
