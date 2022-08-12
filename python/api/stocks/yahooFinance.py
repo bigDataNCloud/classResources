@@ -117,11 +117,10 @@ def _publish(projectId,topic,data,additional=None):
     topicPath='projects/'+projectId+'/topics/'+topic
     publishingFutures=[] # Will collect all the future publish calls in this list.
     for row in data.split('\n')[1:]:  # Split will break out each line as a separate row. [1:] will skip the header row.:
-      cleaned=row.strip()
-      if additional is not None: cleaned+=additional
-      if len(cleaned)>0:
-        # Don't publish an empty message.
-        publishingFutures.append(pubsubClient.publish(topicPath,cleaned.encode())) # Encode the data as bytes.
+      # Don't publish a message that only has empty entries or is an empty line.
+      if len(row.replace(',','').strip())>0:
+        if additional is not None: row+=additional
+        publishingFutures.append(pubsubClient.publish(topicPath,row.encode())) # Encode the data as bytes.
     for publishing in publishingFutures:
       publishing.result() # Calling the result() method will cause the future command to actually execute if it hasn't already done so.
   except:
