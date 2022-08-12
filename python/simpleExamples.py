@@ -84,6 +84,22 @@ def convertToJson(csvData,columns):
   # json.dumps: Convert the Python dict into a JSON string.
   return json.dumps(dict(zip(columns, map(convertType,csvData.split(',')))))
 
+def publishAsJson(projectId,topicName,csvData,columns):
+  '''
+  This does the same thing as the publish() method above but uses the convertToJson() method to translate the csv data
+  into JSON format.
+  Args:
+    projectId:
+    topicName:
+    csvData: a string with data delimited by commas.
+  '''
+  pubsubClient=PublisherClient()
+  topicPath='projects/'+projectId+'/topics/'+topicName
+  # Convert the csv data to a JSON string.
+  jsonString=convertToJson(csvData,columns)
+  futurePublish=pubsubClient.publish(topicPath,jsonString.encode())
+  futurePublish.result() # Will not actually publish the message until you call "result()".
+
 # Example: Read text data from storage.
 myBucket='prof-big-data_data'
 myPath='data/flightsETL/2018-10.csv'
@@ -113,3 +129,5 @@ columns=['ID','name','day','timestamp','sometimesIsEmpty','description','etc']
 
 print('Original Data: '+csvData)
 print('JSON Data: '+convertToJson(csvData,columns))
+
+publishAsJson(projectId,myTopic,csvData,columns)
