@@ -1,6 +1,8 @@
 from google.cloud import storage
 from google.cloud.pubsub_v1 import PublisherClient,SubscriberClient
 from concurrent.futures._base import TimeoutError
+from datetime import date,datetime
+import json
 
 def downloadFromStorage(bucketName,pathInBucket):
   storageClient=storage.Client()
@@ -45,6 +47,43 @@ def subscribe(projectId,topicName,subscriptionName,duration=60):
       print('Stopped waiting for messages since no new messages were published after '+str(duration)+'s.')
     subscriber.delete_subscription(subscription=subscriptionPath) # Delete the subscription we just created.
 
+def convertType(item):
+  '''
+  This utility will guess what the type is of the given string and convert it into a Python primitive of str, int, float.
+  Dates and times are not converted into Python date and datetime since json.dumps is not able to translate these.
+  Args:
+    item: a string with either characters, a number, a date, or a timestamp.
+  Returns:
+    returns the item as a Python primitive.
+  '''
+  # Use trial and error to convert the item. Return whatever does not throw an exception.
+  try:
+    return int(item)
+  except:
+    pass
+  try:
+    return float(item)
+  except:
+    pass
+  return item # Return as a string if all the other attempts through exceptions.
+
+def convertToJson(csvData,columns):
+  '''
+  This is a simple method to convert csv data into a JSON object.
+  You can use this when you publish data as JSON when it is originally as CSV.
+  Args:
+    csvData: a string with comma delimited values.
+    columns: the column names as a list.
+  Returns:
+     returns the json form of the data as a string.
+  '''
+  # split: Split out the columns of the data by commas.
+  # map: Convert the data to Python primitives.
+  # zip: Collate the columns with the data.
+  # dict: Create a Python dict of the data.
+  # json.dumps: Convert the Python dict into a JSON string.
+  return json.dumps(dict(zip(columns, map(convertType,csvData.split(',')))))
+
 # Example: Read text data from storage.
 myBucket='prof-big-data_data'
 myPath='data/flightsETL/2018-10.csv'
@@ -68,3 +107,9 @@ subscribe(projectId,myTopic,'myTestSubscription')
 print('Retrieved '+str(len(subscriptionData))+' messages: ')
 for message in subscriptionData:
   print(message)
+
+csvData='123,ABC,2022-08-15,2022-08-15T11:55:00,,this is just an example,'
+columns=['ID','name','day','timestamp','sometimesIsEmpty','description','etc']
+
+print('Original Data: '+csvData)
+print('JSON Data: '+convertToJson(csvData,columns))
