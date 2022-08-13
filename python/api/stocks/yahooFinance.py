@@ -120,7 +120,10 @@ def _publish(projectId,topic,data,additional=None):
       # Don't publish a message that only has empty entries or is an empty line.
       if len(row.replace(',','').strip())>0:
         if additional is not None: row+=additional
-        publishingFutures.append(pubsubClient.publish(topicPath,row.encode())) # Encode the data as bytes.
+        # Convert row into proper format...  {'symbol':...,'open':...,'close':....}
+        translatedRow={'date':row[0],'open':row[1],'high':row[2],'low':row[3],'close':row[4]}
+        jsonRow=json.dumps(translatedRow)
+        publishingFutures.append(pubsubClient.publish(topicPath,jsonRow.encode())) # Encode the data as bytes.
     for publishing in publishingFutures:
       publishing.result() # Calling the result() method will cause the future command to actually execute if it hasn't already done so.
   except:
