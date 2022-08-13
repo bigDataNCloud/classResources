@@ -74,6 +74,44 @@ _logger = logging.getLogger(__name__)
 
 _allStocksFile='allStocks.csv'
 _storageClient=None
+_yahooColumns=['date','open','high','low','close','adj_close','volume','symbol']
+
+def convertType(item):
+  '''
+  This utility will guess what the type is of the given string and convert it into a Python primitive of str, int, float.
+  Dates and times are not converted into Python date and datetime since json.dumps is not able to translate these.
+  Args:
+    item: a string with either characters, a number, a date, or a timestamp.
+  Returns:
+    returns the item as a Python primitive.
+  '''
+  # Use trial and error to convert the item. Return whatever does not throw an exception.
+  try:
+    return int(item)
+  except:
+    pass
+  try:
+    return float(item)
+  except:
+    pass
+  return item # Return as a string if all the other attempts through exceptions.
+
+def convertToJson(csvData,columns):
+  '''
+  This is a simple method to convert csv data into a JSON object.
+  You can use this when you publish data as JSON when it is originally as CSV.
+  Args:
+    csvData: a string with comma delimited values.
+    columns: the column names as a list.
+  Returns:
+     returns the json form of the data as a string.
+  '''
+  # split: Split out the columns of the data by commas.
+  # map: Convert the data to Python primitives.
+  # zip: Collate the columns with the data.
+  # dict: Create a Python dict of the data.
+  # json.dumps: Convert the Python dict into a JSON string.
+  return json.dumps(dict(zip(columns, map(convertType,csvData.split(',')))))
 
 def _getStorageClient(bucket):
   '''
@@ -120,9 +158,8 @@ def _publish(projectId,topic,data,additional=None):
       # Don't publish a message that only has empty entries or is an empty line.
       if len(row.replace(',','').strip())>0:
         if additional is not None: row+=additional
-        # Convert row into proper format...  {'symbol':...,'open':...,'close':....}
-        translatedRow={'date':row[0],'open':row[1],'high':row[2],'low':row[3],'close':row[4]}
-        jsonRow=json.dumps(translatedRow)
+        # Convert row into JSON.
+        jsonRow=convertToJson(row,_yahooColumns)
         publishingFutures.append(pubsubClient.publish(topicPath,jsonRow.encode())) # Encode the data as bytes.
     for publishing in publishingFutures:
       publishing.result() # Calling the result() method will cause the future command to actually execute if it hasn't already done so.
