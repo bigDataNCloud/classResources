@@ -124,8 +124,8 @@ print('Retrieved '+str(len(subscriptionData))+' messages: ')
 for message in subscriptionData:
   print(message)
 
-csvData='123,ABC,2022-08-15,2022-08-15T11:55:00,,this is just an example,'
-columns=['ID','name','day','timestamp','sometimesIsEmpty','description','etc']
+csvData='2022-08-10,167.67999267578125,169.33999633789062,166.89999389648438,169.24000549316406,169.24000549316406,70076000'
+columns=['date','open','high','low','close','adj_close','volume','symbol']
 
 print('Original Data: '+csvData)
 print('JSON Data: '+convertToJson(csvData,columns))
