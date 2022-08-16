@@ -4,7 +4,7 @@ import functions_framework
 import os
 import json
 import logging
-from datetime import datetime
+from datetime import datetime,date
 from google.cloud import storage
 from google.cloud.pubsub_v1 import PublisherClient
 
@@ -14,7 +14,25 @@ logging.basicConfig(
 _logger=logging.getLogger(__name__)
 
 _storageClient=None
-_columns=['date', 'location', 'total_vaccinations', 'total_distributed', 'people_vaccinated', 'people_fully_vaccinated_per_hundred', 'total_vaccinations_per_hundred', 'people_fully_vaccinated', 'people_vaccinated_per_hundred', 'distributed_per_hundred', 'daily_vaccinations_raw', 'daily_vaccinations', 'daily_vaccinations_per_million', 'share_doses_used', 'total_boosters', 'total_boosters_per_hundred']
+_columns=[
+  'date',
+  'location',
+  'total_vaccinations',
+  'total_distributed', 'people_vaccinated', 'people_fully_vaccinated_per_hundred', 'total_vaccinations_per_hundred', 'people_fully_vaccinated', 'people_vaccinated_per_hundred', 'distributed_per_hundred', 'daily_vaccinations_raw', 'daily_vaccinations', 'daily_vaccinations_per_million', 'share_doses_used', 'total_boosters', 'total_boosters_per_hundred']
+
+# Entry point for a Cloud Function is called "entry".
+# Rename this file to "main.py" when you upload it to create a Cloud Function.
+# Rename the requirements_vaccinations.txt to requirements.txt when you upload it to create a Cloud Function.
+# Trigger a cloud function with the following test:
+{
+  "bucket":"batch-data-cap",
+  "path":"vaccine-data-test",
+  "projectId":"prof-big-data",
+  "addTimestamp":"true",
+  "topic":"vaccines-topic",
+  "pubsub":"true",
+  "inputPath":"covid_vaccinations_us_state_vaccinations_aug.txt"
+}
 
 def convertType(item):
   '''
@@ -34,6 +52,12 @@ def convertType(item):
     return float(item)
   except:
     pass
+  if '/' in item:
+    try:
+      itemParts=item.split('/')
+      return date(int(itemParts[2]),int(itemParts[0]),int(itemParts[1])).strftime('20%y-%m-%d')
+    except:
+      pass
   return item  # Return as a string if all the other attempts through exceptions.
 
 def convertToJson(csvData, columns, delimiter=None):
