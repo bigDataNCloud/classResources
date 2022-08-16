@@ -82,7 +82,7 @@ def convertToJson(csvData,columns):
   # zip: Collate the columns with the data.
   # dict: Create a Python dict of the data.
   # json.dumps: Convert the Python dict into a JSON string.
-  return json.dumps(dict(zip(columns, map(convertType,csvData.split(',')))))
+  return json.dumps(dict(filter(lambda column_value:type(column_value[1])!=str or len(column_value[1])>0,zip(columns, map(convertType,csvData.split(','))))))
 
 def publishAsJson(projectId,topicName,csvData,columns):
   '''
@@ -131,3 +131,7 @@ print('Original Data: '+csvData)
 print('JSON Data: '+convertToJson(csvData,columns))
 
 publishAsJson(projectId,myTopic,csvData,columns)
+
+vaccineData='2021-01-15,Alabama,100567.0,444650.0,86956.0,0.28,2.05,13488.0,1.77,9.07,8267.0,7478.0,1525.0,0.226,,'
+vaccineColumns=['date', 'location', 'total_vaccinations', 'total_distributed', 'people_vaccinated', 'people_fully_vaccinated_per_hundred', 'total_vaccinations_per_hundred', 'people_fully_vaccinated', 'people_vaccinated_per_hundred', 'distributed_per_hundred', 'daily_vaccinations_raw', 'daily_vaccinations', 'daily_vaccinations_per_million', 'share_doses_used', 'total_boosters', 'total_boosters_per_hundred']
+convertToJson(vaccineData,vaccineColumns)
