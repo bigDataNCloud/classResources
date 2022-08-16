@@ -100,6 +100,8 @@ def publishAsJson(projectId,topicName,csvData,columns):
   futurePublish=pubsubClient.publish(topicPath,jsonString.encode())
   futurePublish.result() # Will not actually publish the message until you call "result()".
 
+
+
 # Example: Read text data from storage.
 myBucket='prof-big-data_data'
 myPath='data/flightsETL/2018-10.csv'

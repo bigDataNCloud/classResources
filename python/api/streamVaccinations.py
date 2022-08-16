@@ -51,7 +51,14 @@ def convertToJson(csvData, columns, delimiter=None):
   # zip: Collate the columns with the data.
   # dict: Create a Python dict of the data.
   # json.dumps: Convert the Python dict into a JSON string.
-  return json.dumps(dict(zip(columns, map(convertType, csvData.split(',' if delimiter is None else delimiter)))))
+  values=csvData.split(',' if delimiter is None else delimiter)
+  cleanValues=map(lambda value:value.replace('\r',''),values)
+  # split: Split out the columns of the data by commas.
+  # map: Convert the data to Python primitives.
+  # zip: Collate the columns with the data.
+  # dict: Create a Python dict of the data.
+  # json.dumps: Convert the Python dict into a JSON string.
+  return json.dumps(dict(filter(lambda column_value:type(column_value[1])!=str or len(column_value[1])>0,zip(columns, map(convertType,cleanValues)))))
 
 def _getStorageClient(bucket):
   '''
