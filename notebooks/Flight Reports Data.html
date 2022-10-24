@@ -13976,19 +13976,21 @@ a.anchor-link {
 <li>We will use Google's Cloud Shell service to do this task. You will need to create a project in Google Cloud. (From the Google Cloud Console, go to "Select Project" and create a new project.)</li>
 <li>Activate the Cloud Shell by clicking on the prompt symbol (&gt;_) in the menu bar of the console.</li>
 <li>When you activate the cloud shell, it will tell you if you have a project set, such as the following: (My project has the ID <strong>prof-big-data</strong>.)</li>
-</ol>
-
-</div>
-</div>Welcome to Cloud Shell! Type "help" to get started.
+<pre style="color:#ffffc0; background-color:#000000">
+Welcome to Cloud Shell! Type "help" to get started.
 Your Cloud Platform project in this session is set to prof-big-data.
 Use “gcloud config set project [PROJECT_ID]” to change to a different project.
 krannert_big_data_n_cloud@cloudshell:~ (prof-big-data)$
+</pre>
+</ol>
+</div>
+</div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>If your shell does not have a project set, you will need to configure it to use the project you created in the first step.</p>
-
+<pre style="color:#ffffc0; background-color:#000000">gcloud config set project prof-big-data</pre>
 </div>
-</div>gcloud config set project prof-big-data
+</div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <ol>
@@ -13997,9 +13999,9 @@ krannert_big_data_n_cloud@cloudshell:~ (prof-big-data)$
 <h2 id="Download,-clean,-&amp;-store-flight-report-data">Download, clean, &amp; store flight report data<a class="anchor-link" href="#Download,-clean,-&amp;-store-flight-report-data">&#182;</a></h2><p>Download the flight report data  for a range of years. This data comes from: <a href="https://transtats.bts.gov/DatabaseInfo.asp?QO_VQ=EFD&amp;DB_URL=">Airline On-Time Performance Data</a>.</p>
 <p>Use the script <code>downloadFlightsETL.sh</code> to download CSV files for one or more years.</p>
 <p><em>NOTE: This script does not rely on Python. It is purely shell scripting.</em></p>
-
+<pre style="color:#ffffc0; background-color:#000000">./sh/downloadFlightsETL.sh 2018 2019</pre>
 </div>
-</div>./sh/downloadFlightsETL.sh 2018 2019
+</div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>This will download and clean flight report data, writing resulting data files in data/flightsETL.</p>
@@ -14010,9 +14012,8 @@ krannert_big_data_n_cloud@cloudshell:~ (prof-big-data)$
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>You should see output from the script like the following:</p>
-
-</div>
-</div>Downloading data:
+<pre style="color:#ffffc0; background-color:#000000">
+Downloading data:
 ...downloading 1/2019  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                   Dload  Upload   Total   Spent    Left  Speed
 100 28.1M  100 28.1M    0     0   818k      0  0:00:35  0:00:35 --:--:-- 1228k
@@ -14028,7 +14029,11 @@ Archive:  2018-1.zip
 -rw-r--r--  1 user  group   253M Feb  7  2019 On_Time_Reporting_Carrier_On_Time_Performance_(1987_present)_2018_11.csv
 Cleaning data for 2018:
 ...Cleaning 1/2018 --> SUCCESS
-...Cleaning 2/2018 --> SUCCESS<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+...Cleaning 2/2018 --> SUCCESS
+</pre>
+</div>
+</div>
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
