@@ -1,0 +1,50 @@
+[
+  {
+    "name": "date",
+    "mode": "NULLABLE",
+    "type": "DATE",
+    "fields": []
+  },
+  {
+    "name": "open",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "fields": []
+  },
+  {
+    "name": "high",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "fields": []
+  },
+  {
+    "name": "low",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "fields": []
+  },
+  {
+    "name": "close",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "fields": []
+  },
+  {
+    "name": "adj_close",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "fields": []
+  },
+  {
+    "name": "volume",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "fields": []
+  },
+  {
+    "name": "symbol",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "fields": []
+  }
+]

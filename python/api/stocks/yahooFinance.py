@@ -42,7 +42,29 @@ test=[
      "topic":"stocks-topic",
      "pubsub":"true"
   },
-  
+  # Or,
+  {
+      "period":"10y",
+      "interval":"1d",
+      "pubsub":"true",
+      "topic":"stocks",
+      "projectId":"metal-ring-366817",
+      "bucket":"metal-ring-stocks",
+      "separateLines":"true",
+      "addTimestamp":"true",
+      "debug":10
+  },
+{
+      "period":"10y",
+      "interval":"1d",
+      "pubsub":"true",
+      "topic":"stocks-topic",
+      "projectId":"prof-big-data",
+      "bucket":"prof-big-data_temp",
+      "separateLines":"true",
+      "addTimestamp":"true",
+      "debug":10
+  },
   # Use the following to both write to storage and publish to Pub/Sub:
   {
      "debug":10,
@@ -256,10 +278,7 @@ def entry(request):
   message=_getMessageJSON(request)
 
   debug=message.get('debug', 10)
-  if debug==0:
-    debug=None
-  else:
-    _logger.setLevel(debug)
+  if debug>0: _logger.setLevel(debug)
 
   projectId=message.get('projectId',os.environ.get('GOOGLE_CLOUD_PROJECT','no_project'))
   bucket=message.get('bucket',projectId+'_data')
