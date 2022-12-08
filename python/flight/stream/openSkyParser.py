@@ -25,7 +25,13 @@
 #        "separateLines":true
 #   }
 #   If you only want to publish messages to Pub/Sub and want to specify a topic and project:
-#      {"pubsub":true,"topic":"flight-stream","projectId":"prof-big-data"}
+#      {
+#        "pubsub":"true",
+#        "topic":"streaming-realtime",
+#        "projectId":"prof-big-data",
+#        "separateLines":"true",
+#        "limit":30
+#      }
 #   If you only want to write to GCS and want to specify a bucket and path.
 #      {"storage":true,"bucket":"prof-big-data_data","path":"flight-streaming","separateLines":true,"limit":10}
 
