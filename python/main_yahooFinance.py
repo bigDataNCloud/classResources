@@ -1,5 +1,5 @@
 import functions_framework
-from yahooFinance import entry
+from api.stocks.yahooFinance import entry
 
 @functions_framework.http
 def yahooEntry(request):
